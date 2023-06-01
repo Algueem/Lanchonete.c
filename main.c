@@ -146,5 +146,30 @@ void gerenciar_mantimentos() {
 }
 
 void gerenciar_cardapio() {
+    int option;
+    while ((option = gerenciar_menu()) != 0) {
+        switch (option) { // a fazer
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                printf("Opção inválida! Digite uma dessas opções\n");
+                break;
+        }
+    }
+}
+
+void registrar_pedidos() {
+
+}
+
+void ver_relatorios() {
 
 }
