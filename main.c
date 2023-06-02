@@ -6,9 +6,15 @@
 // Structs
 typedef struct {
     char nome;
+    int codigo;
+    float preco;
+    int quantidade;
 } mantimento;
 
 typedef struct {
+    char nome;
+    int codigo;
+    float preco;
     mantimento receita[10];
 } comida;
 
@@ -25,6 +31,10 @@ void clr() {
 void clear_buffer() {
     int c;
     while ((c=getchar()) != '\n' && c != EOF);
+}
+
+void line() {
+    printf("--------------------------------------------------\n");
 }
 
 void display_options(char **options, int amount); // Mostrar Menu
@@ -46,15 +56,14 @@ void ver_relatorios();
 // Subfunções
 
 void comprar_estoque();
-//
-
-void teste(char **abc) {
-    printf("%s", abc[1]);
-}
 
 // Código principal
 
 int main() {
+    // Fazer sistema de salvar/carregar
+    // comida cardapio[n]; || Alocação dinamica
+    // float saldo = 1000;
+
     clr();
     while ((main_option = main_menu()) != 0) {
         switch (main_option) {
@@ -62,16 +71,17 @@ int main() {
                 gerenciar_mantimentos();
                 break;
             case 2:
-                //gerenciar_cardapio();
+                gerenciar_cardapio();
                 break;
             case 3:
-                //registrar_pedidos();
+                registrar_pedidos();
                 break;
             case 4:
-                //ver_relatorios();
+                ver_relatorios();
                 break;
             default:
-                printf("Opção inválida! Digite uma dessas opções\n");
+                line();
+                printf("|       Opção inválida! Digite uma dessas opções|\n");
                 break;
             
         }
@@ -85,12 +95,13 @@ int main() {
 // Sistema de menus
 
 void display_options(char **options, int amount) {
+    line();
     for (int i = 0; i < amount; i++){
         printf("| Opção %d - %s", i, options[i]);
-        for (int k = 1; k < 30-strlen(options[i]); k++) printf(" ");
+        for (int k = 1; k < 38-strlen(options[i]); k++) printf(" ");
         printf("|\n");
     }
-    printf("------------------------------------------\n");
+    line();
 }
 
 int select_option(char **options, int amount) {
@@ -98,9 +109,10 @@ int select_option(char **options, int amount) {
     int selected;
     while (scanf("%d", &selected) != 1) {
         clr();
-        clear_buffer();
-        printf("Opção inválida! Digite uma dessas opções\n");
+        line();
+        printf("| Opção inválida! Digite uma dessas opções       |\n");
         display_options(options, amount);
+        clear_buffer();
     }
     clr();
     clear_buffer();
@@ -113,20 +125,28 @@ int main_menu() {
                      "Gerenciar cardapio", 
                      "Gerenciar pedidos", 
                      "Ver relatorios"};
-    printf("------------------------------------------\n");
-    printf("|          Painel do Resturante          |\n");
-    printf("------------------------------------------\n");
+    line();
+    printf("|              Painel do Resturante              |\n");
     return select_option(menu, 5);
 };
 
-int gerenciar_menu() {
+int gerenciar_menu(int opt) {
+    line();
+    switch (opt) {
+        case 1:
+            printf("|                   Mantimentos                  |\n");
+            break;
+        case 2:
+            printf("|                   Cardápio                     |\n");
+            break;
+    }
     char *menu[5] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar"};
     return select_option(menu, 5);
 }
 
 void gerenciar_mantimentos() {
     int option;
-    while ((option = gerenciar_menu()) != 0) {
+    while ((option = gerenciar_menu(1)) != 0) {
         switch (option) { // a fazer
             case 0:
                 break;
@@ -139,7 +159,8 @@ void gerenciar_mantimentos() {
             case 4:
                 break;
             default:
-                printf("Opção inválida! Digite uma dessas opções\n");
+                line();
+                printf("|Opção inválida! Digite uma dessas opções        |\n");
                 break;
         }
     }
@@ -147,7 +168,7 @@ void gerenciar_mantimentos() {
 
 void gerenciar_cardapio() {
     int option;
-    while ((option = gerenciar_menu()) != 0) {
+    while ((option = gerenciar_menu(2)) != 0) {
         switch (option) { // a fazer
             case 0:
                 break;
@@ -160,7 +181,8 @@ void gerenciar_cardapio() {
             case 4:
                 break;
             default:
-                printf("Opção inválida! Digite uma dessas opções\n");
+                line();
+                printf("| Opção inválida! Digite uma dessas opções        |\n");
                 break;
         }
     }
