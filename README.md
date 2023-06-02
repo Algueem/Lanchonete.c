@@ -1,1 +1,34 @@
 # Lanchonete.c
+## Tarefas:
+- [X] Menu
+- [ ] Gerenciar mantimentos
+  - [ ] Adicionar
+  - [ ] Editar
+  - [ ] Ver
+  - [ ] Apagar
+  - [ ] Comprar
+    - [ ] Verificar se tem saldo
+    - [ ] Adicionar a quantidade
+- [ ] Gerenciar cardápio
+  - [ ] Adicionar
+  - [ ] Editar
+  - [ ] Ver
+  - [ ] Apagar
+- [ ] Registrar pedidos
+  - [ ] Preparar pedido
+    - [ ] Verificar se tem os mantimentos
+    - [ ] Registrar custo
+    - [ ] Registrar lucro
+    - [ ] Usar os mantimentos
+  - [ ] Salvar
+- [ ] Ver relatórios
+  - [ ] Lucro
+  - [ ] Comida que mais/menos lucrou
+- [ ] Dados
+  - Pedidos
+  - Saldo
+  - Estoque
+  - Cardapio
+  - [ ] Salvar
+  - [ ] Ler
+  - [ ] Editar 
