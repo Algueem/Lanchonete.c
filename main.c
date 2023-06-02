@@ -43,19 +43,19 @@ int select_option(char **options, int amount); // Selecionar um número
 
 // Funções principais
 
-int main_menu();
+int main_menu(); // Abrir o menu principal
 
-void gerenciar_mantimentos();
+void gerenciar_mantimentos(); // Abrir menu de mantimentos
 
-void gerenciar_cardapio();
+void gerenciar_cardapio(); // Abrir o menu do cardapio
 
-void registrar_pedidos();
+void registrar_pedidos(); // Fazer
 
-void ver_relatorios();
+void ver_relatorios(); // Fazer
 
 // Subfunções
 
-void comprar_estoque();
+void comprar_estoque(); // Fazer
 
 // Código principal
 
@@ -64,11 +64,11 @@ int main() {
     // comida cardapio[n]; || Alocação dinamica
     // float saldo = 1000;
 
-    clr();
-    while ((main_option = main_menu()) != 0) {
-        switch (main_option) {
+    clr(); // Limpar
+    while ((main_option = main_menu()) != 0) { //Menu principal
+        switch (main_option) { // Selecionar opções
             case 1:
-                gerenciar_mantimentos();
+                gerenciar_mantimentos(); 
                 break;
             case 2:
                 gerenciar_cardapio();
@@ -85,7 +85,7 @@ int main() {
                 break;
             
         }
-        if (main_option == 0) break;
+        if (main_option == 0) break; // Sair do programa
         //teste(t);
     }
     printf("Saindo...\n");
@@ -97,29 +97,29 @@ int main() {
 void display_options(char **options, int amount) {
     line();
     for (int i = 0; i < amount; i++){
-        printf("| Opção %d - %s", i, options[i]);
-        for (int k = 1; k < 38-strlen(options[i]); k++) printf(" ");
-        printf("|\n");
+        printf("| Opção %d - %s", i, options[i]); // Listar as opções
+        for (int k = 1; k < 38-strlen(options[i]); k++) printf(" "); // Enfeite
+        printf("|\n"); // Enfeitee
     }
     line();
 }
 
-int select_option(char **options, int amount) {
-    display_options(options, amount);
+int select_option(char **options, int amount) { // Sistema de menu por numeros
+    display_options(options, amount); // Mostrar as opções
     int selected;
-    while (scanf("%d", &selected) != 1) {
-        clr();
+    while (scanf("%d", &selected) != 1) { // Scan ate ser uma opcao valida
+        clr(); // 
         line();
         printf("| Opção inválida! Digite uma dessas opções       |\n");
         display_options(options, amount);
-        clear_buffer();
+        clear_buffer(); 
     }
     clr();
     clear_buffer();
-    return selected;
+    return selected; // Retornar o valor selecionado
 }
 
-int main_menu() {
+int main_menu() { // Criar o menu principal
     char *menu[5] = {"Encerrar",
                      "Gerenciar mantimentos",
                      "Gerenciar cardapio", 
@@ -130,7 +130,7 @@ int main_menu() {
     return select_option(menu, 5);
 };
 
-int gerenciar_menu(int opt) {
+int gerenciar_menu(int opt) { // Criar o menu do mantimentos e cardapio
     line();
     switch (opt) {
         case 1:
@@ -144,7 +144,7 @@ int gerenciar_menu(int opt) {
     return select_option(menu, 5);
 }
 
-void gerenciar_mantimentos() {
+void gerenciar_mantimentos() { // Fazer sistema de mantimentos
     int option;
     while ((option = gerenciar_menu(1)) != 0) {
         switch (option) { // a fazer
@@ -166,7 +166,7 @@ void gerenciar_mantimentos() {
     }
 }
 
-void gerenciar_cardapio() {
+void gerenciar_cardapio() { // Fazer sistema de cardapio
     int option;
     while ((option = gerenciar_menu(2)) != 0) {
         switch (option) { // a fazer
@@ -188,10 +188,10 @@ void gerenciar_cardapio() {
     }
 }
 
-void registrar_pedidos() {
+void registrar_pedidos() { // Fazer
 
 }
 
-void ver_relatorios() {
+void ver_relatorios() { // Fazer
 
 }
