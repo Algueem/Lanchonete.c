@@ -3,48 +3,50 @@
 #include<stdlib.h>
 #include<string.h>
 
+#include "menu.h"
+//#include "file.h"
+
 // Structs
 typedef struct {
-    char nome;
     int codigo;
     float preco;
     int quantidade;
+    char nome[];
 } mantimento;
 
 typedef struct {
-    char nome;
     int codigo;
     float preco;
-    mantimento receita[10];
+    mantimento *receita;
+    char nome[];
 } comida;
+
+typedef struct {
+    int lucro;
+    int gasto;
+} pedido;
+
+typedef struct {
+    int saldo;
+    mantimento *estoque;
+    comida *cardapio;
+    pedido *pedidos;
+} Data;
+
+// Arquivo
+
+void salvar_dados(Data *d);
+
+void ler_dados();
+
+void alocar();
 
 // Variavel global
 int main_option = -1;
+Data *dados;
+// Declaracao de funções
 
-// Declaração de funções
-
-// Funções úteis
-void clr() {
-    system("clear");
-}
-
-void clear_buffer() {
-    int c;
-    while ((c=getchar()) != '\n' && c != EOF);
-}
-
-void line() {
-    printf("--------------------------------------------------\n");
-}
-
-void display_options(char **options, int amount); // Mostrar Menu
-
-int select_option(char **options, int amount); // Selecionar um número
-
-// Funções principais
-
-int main_menu(); // Abrir o menu principal
-
+// Funções gerenciamento
 void gerenciar_mantimentos(); // Abrir menu de mantimentos
 
 void gerenciar_cardapio(); // Abrir o menu do cardapio
@@ -53,20 +55,25 @@ void registrar_pedidos(); // Fazer
 
 void ver_relatorios(); // Fazer
 
-// Subfunções
+// Subfuncoes
 
 void comprar_estoque(); // Fazer
 
-// Código principal
+// Codigo principal
 
 int main() {
     // Fazer sistema de salvar/carregar
-    // comida cardapio[n]; || Alocação dinamica
+    alocar();
     // float saldo = 1000;
-
+    //dados->saldo = 1000;
+    //strcpy(dados->estoque[0].nome,"abc");
+    //dados->estoque[0].codigo = 456;
+    //dados->estoque[0].preco = 10.00;
+    //salvar_dados(dados);
+    ler_dados();
     clr(); // Limpar
     while ((main_option = main_menu()) != 0) { //Menu principal
-        switch (main_option) { // Selecionar opções
+        switch (main_option) { // Selecionar opcoes
             case 1:
                 gerenciar_mantimentos(); 
                 break;
@@ -81,68 +88,46 @@ int main() {
                 break;
             default:
                 line();
-                printf("|       Opção inválida! Digite uma dessas opções|\n");
+                printf("| Opção inválida! Digite uma dessas opções       |\n");
                 break;
-            
         }
         if (main_option == 0) break; // Sair do programa
-        //teste(t);
     }
     printf("Saindo...\n");
     return 0;
 }
 
-// Sistema de menus
-
-void display_options(char **options, int amount) {
-    line();
-    for (int i = 0; i < amount; i++){
-        printf("| Opção %d - %s", i, options[i]); // Listar as opções
-        for (int k = 1; k < 38-strlen(options[i]); k++) printf(" "); // Enfeite
-        printf("|\n"); // Enfeitee
-    }
-    line();
+void alocar() {
+    dados = (Data*) calloc(1, sizeof(Data));
+    dados->estoque = (mantimento*) calloc(1, sizeof(mantimento));
+    dados->cardapio = (comida*) calloc(1, sizeof(comida));
+    dados->pedidos = (pedido*) calloc(1, sizeof(pedido));
 }
 
-int select_option(char **options, int amount) { // Sistema de menu por numeros
-    display_options(options, amount); // Mostrar as opções
-    int selected;
-    while (scanf("%d", &selected) != 1) { // Scan ate ser uma opcao valida
-        clr(); // 
-        line();
-        printf("| Opção inválida! Digite uma dessas opções       |\n");
-        display_options(options, amount);
-        clear_buffer(); 
-    }
-    clr();
-    clear_buffer();
-    return selected; // Retornar o valor selecionado
+// Arquivos
+
+void salvar_dados(Data *d) {
+    FILE *arquivo;
+    arquivo = fopen("dados.csv", "wb");
+    if (arquivo == NULL) {
+        fprintf(stderr, "\nErro ao abrir arquivo\n");
+        exit(1);
+    };
+    fwrite(d, sizeof(Data), 1, arquivo);
+    fclose(arquivo);
 }
 
-int main_menu() { // Criar o menu principal
-    char *menu[5] = {"Encerrar",
-                     "Gerenciar mantimentos",
-                     "Gerenciar cardapio", 
-                     "Gerenciar pedidos", 
-                     "Ver relatorios"};
-    line();
-    printf("|              Painel do Resturante              |\n");
-    return select_option(menu, 5);
-};
-
-int gerenciar_menu(int opt) { // Criar o menu do mantimentos e cardapio
-    line();
-    switch (opt) {
-        case 1:
-            printf("|                   Mantimentos                  |\n");
-            break;
-        case 2:
-            printf("|                   Cardápio                     |\n");
-            break;
+void ler_dados() {
+    FILE *arquivo;
+    arquivo = fopen("dados.csv", "rb");
+    if (arquivo == NULL) {
+        fprintf(stderr, "\nErro ao abrir arquivo\n");
+        exit(1);
     }
-    char *menu[5] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar"};
-    return select_option(menu, 5);
+    fread(dados, sizeof(Data), 1, arquivo);
 }
+
+// Menus
 
 void gerenciar_mantimentos() { // Fazer sistema de mantimentos
     int option;
@@ -157,10 +142,12 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
             case 3:
                 break;
             case 4:
+                clr();
+                printf("Codigo %p", dados->estoque[0]);
                 break;
             default:
                 line();
-                printf("|Opção inválida! Digite uma dessas opções        |\n");
+                printf("| Opção inválida! Digite uma dessas opções       |\n");
                 break;
         }
     }
