@@ -169,7 +169,7 @@ void gerenciar_cardapio() { // Fazer sistema de cardapio
                 break;
             default:
                 line();
-                printf("| Opção inválida! Digite uma dessas opções        |\n");
+                printf("| Opção inválida! Digite uma dessas opções       |\n");
                 break;
         }
     }
