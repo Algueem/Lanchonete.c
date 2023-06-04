@@ -4,37 +4,8 @@
 #include<string.h>
 
 #include "menu.h"
+
 //#include "file.h"
-
-// Structs
-typedef struct {
-    int codigo;
-    float preco;
-    int quantidade;
-    char nome[30];
-} mantimento;
-
-typedef struct {
-    int codigo;
-    float preco;
-    mantimento *receita;
-    char nome[30];
-} comida;
-
-typedef struct {
-    int lucro;
-    int gasto;
-} pedido;
-
-typedef struct {
-    float saldo;
-    int qnt_mantimentos;
-    int qnt_comidas;
-    int qnt_pedidos;
-    mantimento *estoque;
-    comida *cardapio;
-    pedido *pedidos;
-} Data;
 
 // Arquivo
 
@@ -45,6 +16,8 @@ void ler_dados();
 void alocar(int q_mant, int q_cardapio, int q_pedidos);
 
 void realocar();
+
+void liberar();
 
 // Variavel global
 int main_option = -1;
@@ -68,17 +41,7 @@ void comprar_estoque(); // Fazer
 // Codigo principal
 
 int main() {
-    // Fazer sistema de salvar/carregar
     alocar(0,0,0);
-    //dados->saldo = 1000;
-    //dados->qnt_comidas = 0;
-    //dados->qnt_mantimentos = 1;
-    //dados->qnt_pedidos = 0;
-    //strcpy(dados->estoque[0].nome,"abc");
-    //dados->estoque[0].codigo = 456;
-    //dados->estoque[0].preco = 10.00;
-    //dados->estoque[0].quantidade = 0;
-    //salvar_dados(dados);
     ler_dados();
     //clr(); // Limpar
     while ((main_option = main_menu()) != 0) { //Menu principal
@@ -103,6 +66,7 @@ int main() {
     }
     //dados.qnt_mantimentos = 0;
     salvar_dados();
+    liberar();
     printf("Saindo...\n");
     return 0;
 }
@@ -120,6 +84,12 @@ void realocar() {
     dados.cardapio = (comida*) realloc(dados.cardapio, dados.qnt_comidas * sizeof(comida));
     dados.pedidos = (pedido*) realloc(dados.pedidos, dados.qnt_pedidos * sizeof(pedido));
     return;
+}
+
+void liberar() {
+    free(dados.estoque);
+    free(dados.cardapio);
+    free(dados.pedidos);
 }
 
 // Arquivos
@@ -169,6 +139,7 @@ void ler_dados() {
 void gerenciar_mantimentos() { // Fazer sistema de mantimentos
     int option;
     while ((option = estoque_menu()) != 0) {
+        int done;
         switch (option) { // a fazer
             case 0: // Voltar
                 break;
@@ -176,6 +147,10 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 clr();
                 dados.qnt_mantimentos += 1;
                 realocar();
+
+                //ler_nome(dados.estoque[dados.qnt_mantimentos-1]);
+
+
                 fflush(stdin);
                 printf("Digite o nome:");
                 fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
@@ -184,8 +159,16 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 printf("Digite o codigo");
                 scanf("%d", &dados.estoque[dados.qnt_mantimentos-1].codigo);
                 dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
+                salvar_dados();
                 break;
             case 2: // Deletar
+                // Colocar o produto na ultima posição do vetor
+                done = deletar_mantimento();
+                if (done == 1){
+                    dados.qnt_mantimentos -= 1;
+                    realocar();
+                    salvar_dados();
+                }
                 break;
             case 3: // Ver
                 clr();
@@ -196,9 +179,14 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 break;
             case 4: // Editar
                 clr();
-                
-                scanf("%f", &dados.estoque[1].preco);
+                printf("Digite a posição: \n");
+                //scanf("%d", &sel);
+                printf("Digite o preco:\n");
+                //scanf("%f", &p);
+                //dados.estoque[sel].preco = p;
                 printf("Editado");
+                break;
+            case 5: // Comprar
                 break;
             default:
                 error = 1;
