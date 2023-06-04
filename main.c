@@ -38,7 +38,7 @@ typedef struct {
 
 // Arquivo
 
-void salvar_dados(Data d);
+void salvar_dados();
 
 void ler_dados();
 
@@ -49,6 +49,7 @@ void realocar();
 // Variavel global
 int main_option = -1;
 Data dados;
+int error = 0;
 // Declaracao de funções
 
 // Funções gerenciamento
@@ -79,7 +80,7 @@ int main() {
     //dados->estoque[0].quantidade = 0;
     //salvar_dados(dados);
     ler_dados();
-    clr(); // Limpar
+    //clr(); // Limpar
     while ((main_option = main_menu()) != 0) { //Menu principal
         switch (main_option) { // Selecionar opcoes
             case 1:
@@ -95,14 +96,13 @@ int main() {
                 ver_relatorios();
                 break;
             default:
-                line();
-                printf("| Opção inválida! Digite uma dessas opções       |\n");
+                error = 1;
                 break;
         }
         if (main_option == 0) break; // Sair do programa
     }
     //dados.qnt_mantimentos = 0;
-    salvar_dados(dados);
+    salvar_dados();
     printf("Saindo...\n");
     return 0;
 }
@@ -124,19 +124,19 @@ void realocar() {
 
 // Arquivos
 
-void salvar_dados(Data d) {
+void salvar_dados() {
     FILE *arquivo;
     arquivo = fopen("dados.csv", "wb");
     if (arquivo == NULL) {
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     };
-    fwrite(&(d.qnt_comidas), sizeof(int), 1, arquivo);
-    fwrite(&(d.qnt_pedidos), sizeof(int), 1, arquivo);
-    fwrite(&(d.qnt_mantimentos), sizeof(int), 1, arquivo);
-    fwrite(d.estoque, sizeof(mantimento), d.qnt_mantimentos, arquivo);
-    fwrite(d.pedidos, sizeof(pedido), d.qnt_pedidos, arquivo);
-    fwrite(d.cardapio, sizeof(comida), d.qnt_comidas, arquivo);
+    fwrite(&(dados.qnt_comidas), sizeof(int), 1, arquivo);
+    fwrite(&(dados.qnt_pedidos), sizeof(int), 1, arquivo);
+    fwrite(&(dados.qnt_mantimentos), sizeof(int), 1, arquivo);
+    fwrite(dados.estoque, sizeof(mantimento), dados.qnt_mantimentos, arquivo);
+    fwrite(dados.pedidos, sizeof(pedido), dados.qnt_pedidos, arquivo);
+    fwrite(dados.cardapio, sizeof(comida), dados.qnt_comidas, arquivo);
     fclose(arquivo);
     return;
 }
@@ -168,11 +168,11 @@ void ler_dados() {
 
 void gerenciar_mantimentos() { // Fazer sistema de mantimentos
     int option;
-    while ((option = gerenciar_menu(1)) != 0) {
+    while ((option = estoque_menu()) != 0) {
         switch (option) { // a fazer
-            case 0:
+            case 0: // Voltar
                 break;
-            case 1:
+            case 1: // Adicionar
                 clr();
                 dados.qnt_mantimentos += 1;
                 realocar();
@@ -185,24 +185,23 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 scanf("%d", &dados.estoque[dados.qnt_mantimentos-1].codigo);
                 dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
                 break;
-            case 2:
+            case 2: // Deletar
                 break;
-            case 3:
+            case 3: // Ver
                 clr();
                 for (int t = 0; t < dados.qnt_mantimentos; t++) {
                     mantimento m = dados.estoque[t];
                     printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo);
                 }
                 break;
-            case 4:
+            case 4: // Editar
                 clr();
                 
                 scanf("%f", &dados.estoque[1].preco);
                 printf("Editado");
                 break;
             default:
-                line();
-                printf("| Opção inválida! Digite uma dessas opções       |\n");
+                error = 1;
                 break;
         }
     }
@@ -211,21 +210,22 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
 
 void gerenciar_cardapio() { // Fazer sistema de cardapio
     int option;
-    while ((option = gerenciar_menu(2)) != 0) {
+    while ((option = cardapio_menu()) != 0) {
         switch (option) { // a fazer
-            case 0:
+            case 0: // Voltar
                 break;
-            case 1:
+            case 1: // Adicionar
+                break; 
+            case 2: // Deletar
                 break;
-            case 2:
+            case 3: // Ver
                 break;
-            case 3:
+            case 4: // Editar
                 break;
-            case 4:
+            case 5: // Preparar
                 break;
             default:
-                line();
-                printf("| Opção inválida! Digite uma dessas opções       |\n");
+                error = 1;
                 break;
         }
     }
