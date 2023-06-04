@@ -18,15 +18,18 @@ int main_menu(); // Abrir o menu principal
 
 void clr() {
     system("clear");
+    return;
 }
 
 void clear_buffer() {
     int c;
     while ((c=getchar()) != '\n' && c != EOF);
+    return;
 }
 
 void line() {
     printf("--------------------------------------------------\n");
+    return;
 }
 
 void display_options(char **options, int amount) {
@@ -37,6 +40,7 @@ void display_options(char **options, int amount) {
         printf("|\n"); // Enfeite
     }
     line();
+    return;
 }
 
 int select_option(char **options, int amount) { // Sistema de menu por numeros

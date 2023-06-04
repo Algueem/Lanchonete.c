@@ -79,7 +79,7 @@ int main() {
     //dados->estoque[0].quantidade = 0;
     //salvar_dados(dados);
     ler_dados();
-    //clr(); // Limpar
+    clr(); // Limpar
     while ((main_option = main_menu()) != 0) { //Menu principal
         switch (main_option) { // Selecionar opcoes
             case 1:
@@ -112,12 +112,14 @@ void alocar(int q_mant, int q_cardapio, int q_pedidos) {
     dados.estoque = (mantimento*) calloc(q_mant, sizeof(mantimento));
     dados.cardapio = (comida*) calloc(q_cardapio, sizeof(comida));
     dados.pedidos = (pedido*) calloc(q_pedidos, sizeof(pedido));
+    return;
 }
 
 void realocar() {
     dados.estoque = (mantimento*) realloc(dados.estoque, dados.qnt_mantimentos * sizeof(mantimento));
     dados.cardapio = (comida*) realloc(dados.cardapio, dados.qnt_comidas * sizeof(comida));
     dados.pedidos = (pedido*) realloc(dados.pedidos, dados.qnt_pedidos * sizeof(pedido));
+    return;
 }
 
 // Arquivos
@@ -136,6 +138,7 @@ void salvar_dados(Data d) {
     fwrite(d.pedidos, sizeof(pedido), d.qnt_pedidos, arquivo);
     fwrite(d.cardapio, sizeof(comida), d.qnt_comidas, arquivo);
     fclose(arquivo);
+    return;
 }
 
 void ler_dados() {
@@ -158,6 +161,7 @@ void ler_dados() {
     fread(dados.pedidos, sizeof(pedido), dados.qnt_pedidos, arquivo);
     fread(dados.cardapio, sizeof(comida), dados.qnt_comidas, arquivo);
     fclose(arquivo);
+    return;
 }
 
 // Menus
@@ -174,7 +178,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 realocar();
                 fflush(stdin);
                 printf("Digite o nome:");
-                fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 50, stdin);
+                fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
                 printf("Digite o preço");
                 scanf("%f", &dados.estoque[dados.qnt_mantimentos-1].preco);
                 printf("Digite o codigo");
@@ -202,6 +206,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 break;
         }
     }
+    return;
 }
 
 void gerenciar_cardapio() { // Fazer sistema de cardapio
@@ -224,12 +229,13 @@ void gerenciar_cardapio() { // Fazer sistema de cardapio
                 break;
         }
     }
+  return;
 }
 
 void registrar_pedidos() { // Fazer
-
+    return;
 }
 
 void ver_relatorios() { // Fazer
-
+    return;
 }
