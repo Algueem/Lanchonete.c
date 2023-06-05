@@ -2,10 +2,10 @@
 ## Tarefas:
 - [X] Menu
 - [ ] Gerenciar mantimentos
-  - [ ] Adicionar
-  - [ ] Editar
-  - [ ] Ver
-  - [ ] Apagar
+  - [ ] (Em progresso) Adicionar 
+  - [ ] (Em progresso) Editar
+  - [ ] Ver 
+  - [X] Apagar
   - [ ] Comprar
     - [ ] Verificar se tem saldo
     - [ ] Adicionar a quantidade
@@ -29,6 +29,6 @@
   - Saldo
   - Estoque
   - Cardapio
-  - [ ] Salvar
-  - [ ] Ler
-  - [ ] Editar 
+  - [X] Salvar
+  - [X] Ler
+  - [X] Editar 
