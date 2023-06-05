@@ -41,9 +41,9 @@ void comprar_estoque(); // Fazer
 // Codigo principal
 
 int main() {
-    alocar(0,0,0);
     ler_dados();
-    //clr(); // Limpar
+    clr(); // Limpar
+    // menu
     while ((main_option = main_menu()) != 0) { //Menu principal
         switch (main_option) { // Selecionar opcoes
             case 1:
@@ -119,6 +119,7 @@ void ler_dados() {
         exit(1);
     }
     // Dados padrão
+    alocar(0,0,0);
     dados.qnt_mantimentos = 0;
     dados.qnt_pedidos = 0;
     dados.qnt_comidas = 0;
@@ -141,16 +142,12 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
     while ((option = estoque_menu()) != 0) {
         int done;
         switch (option) { // a fazer
-            case 0: // Voltar
+            case 0: // Voltar -- Feito
                 break;
-            case 1: // Adicionar
+            case 1: // Adicionar -- Mudar
                 clr();
                 dados.qnt_mantimentos += 1;
                 realocar();
-
-                //ler_nome(dados.estoque[dados.qnt_mantimentos-1]);
-
-
                 fflush(stdin);
                 printf("Digite o nome:");
                 fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
@@ -161,7 +158,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
                 salvar_dados();
                 break;
-            case 2: // Deletar
+            case 2: // Deletar -- Feito
                 // Colocar o produto na ultima posição do vetor
                 done = deletar_mantimento();
                 if (done == 1){
@@ -170,14 +167,14 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                     salvar_dados();
                 }
                 break;
-            case 3: // Ver
+            case 3: // Ver -- Feito
                 clr();
                 for (int t = 0; t < dados.qnt_mantimentos; t++) {
                     mantimento m = dados.estoque[t];
                     printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo);
                 }
                 break;
-            case 4: // Editar
+            case 4: // Editar -- Fazer
                 clr();
                 printf("Digite a posição: \n");
                 //scanf("%d", &sel);
@@ -186,9 +183,9 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 //dados.estoque[sel].preco = p;
                 printf("Editado");
                 break;
-            case 5: // Comprar
+            case 5: // Comprar -- Fazer
                 break;
-            default:
+            default: // Feito
                 error = 1;
                 break;
         }
@@ -221,6 +218,9 @@ void gerenciar_cardapio() { // Fazer sistema de cardapio
 }
 
 void registrar_pedidos() { // Fazer
+    //dados.qnt_pedidos += 1;
+    //realocar();
+    //dados.pedidos[dados.qnt_pedidos-1];
     return;
 }
 
