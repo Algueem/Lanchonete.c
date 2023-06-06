@@ -25,7 +25,7 @@ Data dados;
 int error = 0;
 // Declaracao de funções
 
-// Funções gerenciamento
+// Funcoes gerenciamento
 void gerenciar_mantimentos(); // Abrir menu de mantimentos
 
 void gerenciar_cardapio(); // Abrir o menu do cardapio
@@ -94,9 +94,9 @@ void liberar() { // Liberar a memoria alocada
 // Arquivos
 
 void salvar_dados() {
-    FILE *arquivo; // Variável arquivo é um ponteiro
+    FILE *arquivo; // Variavel arquivo e um ponteiro
     arquivo = fopen("dados.csv", "rb"); // Abrir o arquivo
-    if (arquivo == NULL) { // Se não conseguir abrir
+    if (arquivo == NULL) { // Se nao conseguir abrir
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     };
@@ -112,13 +112,13 @@ void salvar_dados() {
 }
 
 void ler_dados() {
-    FILE *arquivo; // Variável arquivo é um ponteiro
+    FILE *arquivo; // Variavel arquivo e um ponteiro
     arquivo = fopen("dados.csv", "rb"); // Abrir o arquivo
-    if (arquivo == NULL) { // Se não conseguir abrir
+    if (arquivo == NULL) { // Se nao conseguir abrir
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     }
-    // Dados padrão
+    // Dados padrao
     alocar(0,0,0); // Deixar a memoria pronta
     dados.qnt_mantimentos = 0;
     dados.qnt_pedidos = 0;
@@ -149,12 +149,12 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
             case 1: // Adicionar -- Feito
                 dados.qnt_mantimentos += 1;
                 realocar();
-                done = cadastrar_mantimento(); // Função para cadastrar, 1 = sem erro, 0 = erro
+                done = cadastrar_mantimento(); // Funcao para cadastrar, 1 = sem erro, 0 = erro
                 if (done == 1) salvar_dados(); // Salvar os dados
                 break;
             case 2: // Deletar -- Feito
                 // Colocar o produto na ultima posição do vetor
-                done = deletar_mantimento(); // Função para apagar, 1 = sem erro, 0 = erro
+                done = deletar_mantimento(); // Funcao para apagar, 1 = sem erro, 0 = erro
                 if (done == 1){
                     dados.qnt_mantimentos -= 1; // Diminuir o tamanho do vetor
                     realocar(); // Realocar o vetor com 1 espaço a menos 
@@ -170,7 +170,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 break;
             case 4: // Editar -- Fazer
                 clr();
-                printf("Digite a posição: \n");
+                printf("Digite a posicao: \n");
                 //scanf("%d", &sel);
                 printf("Digite o preco:\n");
                 //scanf("%f", &p);

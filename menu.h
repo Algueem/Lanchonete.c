@@ -9,14 +9,14 @@
 // Structs
 typedef struct {
     int codigo; // Codigo do produto
-    float preco; // Preço
+    float preco; // Preco
     int quantidade; // Quantidade no estoque
     char nome[30]; // Nome
 } mantimento;
 
 typedef struct {
     int codigo; // Codigo da comida
-    float preco; // Preço
+    float preco; // Preco
     int *receita; // Vetor com os codigos dos mantimentos
     char nome[30]; // Nome
 } comida;
@@ -36,7 +36,7 @@ typedef struct { // Base de dados
     pedido *pedidos; // Vetor de pedidos
 } Data;
 
-extern int error; // Importar variáveis da main
+extern int error; // Importar variaveis da main
 extern Data dados;
 
 // Prototipos
@@ -45,7 +45,7 @@ void display_options(char **options, int amount); // Mostrar Menu
 
 void display_header(int opt); //
 
-int select_option(char **options, int amount, int menu); // Selecionar um número
+int select_option(char **options, int amount, int menu); // Selecionar um numero
 
 int main_menu(); // Abrir o menu principal
 
@@ -72,10 +72,10 @@ void line() { // Parte do menu
     return;
 }
 
-void display_options(char **options, int amount) { // Listar as opções
+void display_options(char **options, int amount) { // Listar as opcoes
     line();
     for (int i = 0; i < amount; i++){
-        printf("| Opção %d - %s", i, options[i]); // Listar as opções
+        printf("| Opção %d - %s", i, options[i]); // Escreve as opcoes
         for (int k = 1; k < 38-strlen(options[i]); k++) printf(" "); // Enfeite
         printf("|\n"); // Enfeite
     }
@@ -113,7 +113,7 @@ void display_header(int opt) { // Função pra guardar os printf
 }
 
 int select_option(char **options, int amount, int menu) { // Sistema de menu por numeros
-    display_options(options, amount); // Mostrar as opções
+    display_options(options, amount); // Mostrar as opcoes
     int selected; // Variavel para guardar a opção selecionada
     while (scanf("%d", &selected) != 1) { // Scan ate ser uma opcao valida
         clr(); // Limpar o console
@@ -129,8 +129,8 @@ int select_option(char **options, int amount, int menu) { // Sistema de menu por
     return selected; // Retornar o valor selecionado
 }
 
-int wait_for_input(int m, char *text) { // Função para ler numeros
-    int opt; // Entrada do usuário
+int wait_for_input(int m, char *text) { // Funcao para ler numeros
+    int opt; // Entrada do usuario
     line(); // Criar menu
     display_header(m);
     line();
@@ -163,7 +163,7 @@ int main_menu() { // Criar o menu principal
         display_header(99);
         error = 0;
     }
-    return select_option(menu, 5, 0); // Esperar a opção ser selecionada e retornar
+    return select_option(menu, 5, 0); // Esperar a opcao ser selecionada e retornar
 };
 
 int estoque_menu() { // Criar o menu de mantimentos 
@@ -192,7 +192,7 @@ int cadastrar_mantimento() {
     line();
     display_header(11);
     line();
-    printf("Digite o preço: \n");
+    printf("Digite o preco: \n");
     while (scanf("%f", &preco) != 1) {
         clr();
         line();
@@ -207,12 +207,12 @@ int cadastrar_mantimento() {
     dados.estoque[dados.qnt_mantimentos-1].preco = preco;
     
     clr();
-    mant_cod = wait_for_input(11, "Digite o código:");
+    mant_cod = wait_for_input(11, "Digite o codigo:");
     dados.estoque[dados.qnt_mantimentos-1].codigo = mant_cod;
 
     dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
     mantimento prod = dados.estoque[dados.qnt_mantimentos-1];
-    printf("Produto cadastrado!\nNome: %sPreço %.2f\nCódigo: %d\n", prod.nome, prod.preco, prod.codigo);
+    printf("Produto cadastrado!\nNome: %sPreço %.2f\nCodigo: %d\n", prod.nome, prod.preco, prod.codigo);
     printf("Pressione qualquer tecla para continuar...");
     getchar();
     return 1;
@@ -222,7 +222,7 @@ int deletar_mantimento() {
     int mant_cod; // Codigo do produto a ser deletado
     mantimento aux; // Variaveis auxiliares
     clr(); // Limpar
-    mant_cod = wait_for_input(12, "Digite o codigo do produto que você quer deletar:\n"); // Ler o codigo
+    mant_cod = wait_for_input(12, "Digite o codigo do produto que voce quer deletar:\n"); // Ler o codigo
     for (int i = 0; i < dados.qnt_mantimentos; i++) { // Procurar o produt
         if (dados.estoque[i].codigo == mant_cod) { // Se o produto for encontrado
             aux = dados.estoque[dados.qnt_mantimentos-1]; // Salvar o ultimo produto do vetor
