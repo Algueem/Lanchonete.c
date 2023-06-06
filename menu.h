@@ -8,35 +8,35 @@
 
 // Structs
 typedef struct {
-    int codigo;
-    float preco;
-    int quantidade;
-    char nome[30];
+    int codigo; // Codigo do produto
+    float preco; // Preço
+    int quantidade; // Quantidade no estoque
+    char nome[30]; // Nome
 } mantimento;
 
 typedef struct {
-    int codigo;
-    float preco;
-    mantimento *receita;
-    char nome[30];
+    int codigo; // Codigo da comida
+    float preco; // Preço
+    int *receita; // Vetor com os codigos dos mantimentos
+    char nome[30]; // Nome
 } comida;
 
-typedef struct {
+typedef struct { // Salvar quanto cada pedido custou e lucrou
     int lucro;
     int gasto;
 } pedido;
 
-typedef struct {
-    float saldo;
-    int qnt_mantimentos;
+typedef struct { // Base de dados
+    float saldo; // Dinheiro
+    int qnt_mantimentos; // Usado para saber quanta memoria sera alocada
     int qnt_comidas;
     int qnt_pedidos;
-    mantimento *estoque;
-    comida *cardapio;
-    pedido *pedidos;
+    mantimento *estoque; // Vetor de mantimentos
+    comida *cardapio; // Vetor de comidas
+    pedido *pedidos; // Vetor de pedidos
 } Data;
 
-extern int error;
+extern int error; // Importar variáveis da main
 extern Data dados;
 
 // Prototipos
@@ -56,23 +56,23 @@ int cardapio_menu(); // Menu do cardapio
 
 // Funções
 
-void clr() {
+void clr() { // Limpar o console
     system("clear");
     return;
 }
 
-void clear_buffer() {
+void clear_buffer() { // Limpar o buffer
     int c;
     while ((c=getchar()) != '\n' && c != EOF);
     return;
 }
 
-void line() {
+void line() { // Parte do menu 
     printf("--------------------------------------------------\n");
     return;
 }
 
-void display_options(char **options, int amount) {
+void display_options(char **options, int amount) { // Listar as opções
     line();
     for (int i = 0; i < amount; i++){
         printf("| Opção %d - %s", i, options[i]); // Listar as opções
@@ -83,7 +83,7 @@ void display_options(char **options, int amount) {
     return;
 }
 
-void display_header(int opt) {
+void display_header(int opt) { // Função pra guardar os printf
     switch (opt) {
         case 0: // Menu
             printf("|              Painel do Resturante              |\n");
@@ -94,11 +94,16 @@ void display_header(int opt) {
         case 2:
             printf("|                   Cardápio                     |\n");
             break;
-
+        case 11: // 1->1 = Mantimentos -> Adicionar
+            printf("|           Cadastrando Mantimento               |\n");
+            break;
         case 12: // 1->2 = Mantimentos -> Deletar
             printf("|            Deletando Mantimento                |\n");
             break;
         // Fazer mais se necessario
+        case 98:
+            printf("| Não é uma entrada válida                       |\n");
+            break;
         case 99:
             printf("| Opção inválida! Digite uma dessas opções       |\n");
             break;
@@ -109,33 +114,33 @@ void display_header(int opt) {
 
 int select_option(char **options, int amount, int menu) { // Sistema de menu por numeros
     display_options(options, amount); // Mostrar as opções
-    int selected;
+    int selected; // Variavel para guardar a opção selecionada
     while (scanf("%d", &selected) != 1) { // Scan ate ser uma opcao valida
-        clr(); // 
-        line();
+        clr(); // Limpar o console
+        line(); // Recriar o menu
         display_header(menu);
         line();
         display_header(99);
         display_options(options, amount);
-        clear_buffer(); 
+        clear_buffer(); // Limpar buffer
     }
     clr();
     clear_buffer();
     return selected; // Retornar o valor selecionado
 }
 
-int wait_for_input(int m, char *text) {
-    int opt;
-    line();
+int wait_for_input(int m, char *text) { // Função para ler numeros
+    int opt; // Entrada do usuário
+    line(); // Criar menu
     display_header(m);
     line();
     printf("%s", text);
     while (scanf("%d", &opt) != 1) { // Scan ate ser uma opcao valida
-        clr();
-        line();
+        clr(); // Limpar
+        line(); // Criar menu
         display_header(m);
         line();
-        display_header(99);
+        display_header(98);
         line();
         printf("%s", text);
         clear_buffer(); 
@@ -151,14 +156,14 @@ int main_menu() { // Criar o menu principal
                      "Gerenciar cardapio", 
                      "Gerenciar pedidos", 
                      "Ver relatorios"};
-    line();
+    line(); // Criar menu
     display_header(0);
     if(error == 1) {
         line();
         display_header(99);
         error = 0;
     }
-    return select_option(menu, 5, 0);
+    return select_option(menu, 5, 0); // Esperar a opção ser selecionada e retornar
 };
 
 int estoque_menu() { // Criar o menu de mantimentos 
@@ -173,32 +178,82 @@ int estoque_menu() { // Criar o menu de mantimentos
     return select_option(menu, 6, 1);
 }
 
-void cadastrar_mantimento() {
+int cadastrar_mantimento() {
+    int mant_cod;
+    float preco;
     clr();
-    printf("Você está cadastrando um mantimento\nDigite o nome:\n");
-    return;
+    line();
+    display_header(11);
+    line();
+    printf("Digite o nome:\n");
+    fflush(stdin);
+    fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
+    clr();
+    line();
+    display_header(11);
+    line();
+    printf("Digite o preço: \n");
+    while (scanf("%f", &preco) != 1) {
+        clr();
+        line();
+        display_header(11);
+        line();
+        display_header(98);
+        line();
+        printf("Digite o preço: \n");
+        clear_buffer();
+    }
+    clear_buffer();
+    dados.estoque[dados.qnt_mantimentos-1].preco = preco;
+    
+    clr();
+    mant_cod = wait_for_input(11, "Digite o código:");
+    dados.estoque[dados.qnt_mantimentos-1].codigo = mant_cod;
+
+    dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
+    mantimento prod = dados.estoque[dados.qnt_mantimentos-1];
+    printf("Produto cadastrado!\nNome: %sPreço %.2f\nCódigo: %d\n", prod.nome, prod.preco, prod.codigo);
+    printf("Pressione qualquer tecla para continuar...");
+    getchar();
+    return 1;
 }
 
 int deletar_mantimento() {
-    int mant_cod;
-    clr();
-    mant_cod = wait_for_input(12, "Digite o codigo do produto que você quer deletar:\n");
-    mantimento m, aux;
-    for (int i = 0; i < dados.qnt_mantimentos; i++) {
-        if (dados.estoque[i].codigo == mant_cod) {
-            aux = dados.estoque[dados.qnt_mantimentos-1];
-            dados.estoque[dados.qnt_mantimentos-1] = dados.estoque[i];
+    int mant_cod; // Codigo do produto a ser deletado
+    mantimento aux; // Variaveis auxiliares
+    clr(); // Limpar
+    mant_cod = wait_for_input(12, "Digite o codigo do produto que você quer deletar:\n"); // Ler o codigo
+    for (int i = 0; i < dados.qnt_mantimentos; i++) { // Procurar o produt
+        if (dados.estoque[i].codigo == mant_cod) { // Se o produto for encontrado
+            aux = dados.estoque[dados.qnt_mantimentos-1]; // Salvar o ultimo produto do vetor
+            dados.estoque[dados.qnt_mantimentos-1] = dados.estoque[i]; // Trocar
             dados.estoque[i] = aux;
-            return 1;
+            printf("Produto deletado! Pressinone ENTER para voltar ao menu...\n");
+            getchar();
+            clr();
+            return 1; // Quando acabar ele vai realocar com menos memoria pro produto sumir
         }
     }
-    printf("Não foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
-    getchar();
+    printf("Não foi encontrado o produto! Pressione ENTER para voltar ao menu...\n");
+    getchar(); // Esperar uma entrada
+    clr();
+    return 0; // Nao encontrou nada
+}
+
+int editar_mantimento() { // Fazer
+    return 0;
+}
+
+void ver_mantimentos() { // Fazer
+    return;
+}
+
+int comprar_mantimento() { // Fazer
     return 0;
 }
 
 int cardapio_menu() { // Criar o menu do cardapio
-    line();
+    line(); // Criar menu
     display_header(2);
     if(error == 1) {
         line();

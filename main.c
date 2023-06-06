@@ -41,10 +41,10 @@ void comprar_estoque(); // Fazer
 // Codigo principal
 
 int main() {
-    ler_dados();
+    ler_dados(); // Ler os dados
     clr(); // Limpar
     // menu
-    while ((main_option = main_menu()) != 0) { //Menu principal
+    while ((main_option = main_menu()) != 0) { // Menu principal
         switch (main_option) { // Selecionar opcoes
             case 1:
                 gerenciar_mantimentos(); 
@@ -65,28 +65,27 @@ int main() {
         if (main_option == 0) break; // Sair do programa
     }
     //dados.qnt_mantimentos = 0;
-    salvar_dados();
-    liberar();
+    salvar_dados(); // Salvar os dados
+    liberar(); // Liberar a memoria
     printf("Saindo...\n");
     return 0;
 }
 
-void alocar(int q_mant, int q_cardapio, int q_pedidos) {
-    //dados = (Data*) calloc(1, sizeof(Data));
+void alocar(int q_mant, int q_cardapio, int q_pedidos) { // Preparar a memoria
     dados.estoque = (mantimento*) calloc(q_mant, sizeof(mantimento));
     dados.cardapio = (comida*) calloc(q_cardapio, sizeof(comida));
     dados.pedidos = (pedido*) calloc(q_pedidos, sizeof(pedido));
     return;
 }
 
-void realocar() {
+void realocar() { // Mudar o tamanho dos vetores conforme o necessario
     dados.estoque = (mantimento*) realloc(dados.estoque, dados.qnt_mantimentos * sizeof(mantimento));
     dados.cardapio = (comida*) realloc(dados.cardapio, dados.qnt_comidas * sizeof(comida));
     dados.pedidos = (pedido*) realloc(dados.pedidos, dados.qnt_pedidos * sizeof(pedido));
     return;
 }
 
-void liberar() {
+void liberar() { // Liberar a memoria alocada
     free(dados.estoque);
     free(dados.cardapio);
     free(dados.pedidos);
@@ -95,12 +94,13 @@ void liberar() {
 // Arquivos
 
 void salvar_dados() {
-    FILE *arquivo;
-    arquivo = fopen("dados.csv", "wb");
-    if (arquivo == NULL) {
+    FILE *arquivo; // Variável arquivo é um ponteiro
+    arquivo = fopen("dados.csv", "rb"); // Abrir o arquivo
+    if (arquivo == NULL) { // Se não conseguir abrir
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     };
+    // Escrever tudo da struct no arquivo
     fwrite(&(dados.qnt_comidas), sizeof(int), 1, arquivo);
     fwrite(&(dados.qnt_pedidos), sizeof(int), 1, arquivo);
     fwrite(&(dados.qnt_mantimentos), sizeof(int), 1, arquivo);
@@ -112,21 +112,23 @@ void salvar_dados() {
 }
 
 void ler_dados() {
-    FILE *arquivo;
-    arquivo = fopen("dados.csv", "rb");
-    if (arquivo == NULL) {
+    FILE *arquivo; // Variável arquivo é um ponteiro
+    arquivo = fopen("dados.csv", "rb"); // Abrir o arquivo
+    if (arquivo == NULL) { // Se não conseguir abrir
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     }
     // Dados padrão
-    alocar(0,0,0);
+    alocar(0,0,0); // Deixar a memoria pronta
     dados.qnt_mantimentos = 0;
     dados.qnt_pedidos = 0;
     dados.qnt_comidas = 0;
     // Carregando
+    // Ler os dados para a variavel dados
     fread(&(dados.qnt_comidas), sizeof(int), 1, arquivo);
     fread(&(dados.qnt_pedidos), sizeof(int), 1, arquivo);
     fread(&(dados.qnt_mantimentos), sizeof(int), 1, arquivo);
+    // Realocar o vetor dos dados para armazenar os mantimentos etc...
     realocar(dados.qnt_mantimentos, dados.qnt_comidas,dados.qnt_pedidos);
     fread(dados.estoque, sizeof(mantimento), dados.qnt_mantimentos, arquivo);
     fread(dados.pedidos, sizeof(pedido), dados.qnt_pedidos, arquivo);
@@ -144,34 +146,26 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
         switch (option) { // a fazer
             case 0: // Voltar -- Feito
                 break;
-            case 1: // Adicionar -- Mudar
-                clr();
+            case 1: // Adicionar -- Feito
                 dados.qnt_mantimentos += 1;
                 realocar();
-                fflush(stdin);
-                printf("Digite o nome:");
-                fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
-                printf("Digite o preço");
-                scanf("%f", &dados.estoque[dados.qnt_mantimentos-1].preco);
-                printf("Digite o codigo");
-                scanf("%d", &dados.estoque[dados.qnt_mantimentos-1].codigo);
-                dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
-                salvar_dados();
+                done = cadastrar_mantimento(); // Função para cadastrar, 1 = sem erro, 0 = erro
+                if (done == 1) salvar_dados(); // Salvar os dados
                 break;
             case 2: // Deletar -- Feito
                 // Colocar o produto na ultima posição do vetor
-                done = deletar_mantimento();
+                done = deletar_mantimento(); // Função para apagar, 1 = sem erro, 0 = erro
                 if (done == 1){
-                    dados.qnt_mantimentos -= 1;
-                    realocar();
-                    salvar_dados();
+                    dados.qnt_mantimentos -= 1; // Diminuir o tamanho do vetor
+                    realocar(); // Realocar o vetor com 1 espaço a menos 
+                    salvar_dados(); // Salvar os dados
                 }
                 break;
             case 3: // Ver -- Feito
                 clr();
-                for (int t = 0; t < dados.qnt_mantimentos; t++) {
-                    mantimento m = dados.estoque[t];
-                    printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo);
+                for (int t = 0; t < dados.qnt_mantimentos; t++) { // Percorrer todos os produtos
+                    mantimento m = dados.estoque[t]; // Pegar os dados
+                    printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo); // Mostrar
                 }
                 break;
             case 4: // Editar -- Fazer
