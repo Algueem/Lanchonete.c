@@ -100,6 +100,15 @@ void display_header(int opt, int error) { // Função pra guardar os printf
         case 12: // 1->2 = Mantimentos -> Deletar
             printf("|            Deletando Mantimento                |\n");
             break;
+        case 13: // 1->3 = Mantimentos -> Ver
+            printf("|            Lista de Mantimentos                |\n");
+            break;
+        case 14: // 1->4 = Mantimentos -> Editar
+            printf("|             Editando Mantimento                |\n");
+            break;
+        case 15: // 1->5 = Mantimentos -> Comprar
+            printf("|             Comprando Mantimento               |\n");
+            break;
         default:
             break;
     }
@@ -107,11 +116,11 @@ void display_header(int opt, int error) { // Função pra guardar os printf
         // Fazer mais se necessario
         case 98:
             line();
-            printf("| Não e uma entrada valida                       |\n");
+            printf("| Nao e uma entrada valida                       |\n");
             break;
         case 99:
             line();
-            printf("| Opção invalida! Digite uma dessas opcoes       |\n");
+            printf("| Opcao invalida! Digite uma dessas opcoes       |\n");
             break;
         default:
             break;
@@ -261,7 +270,8 @@ int adicionar_cardapio() {
             return 1;
         }
     }
-    printf("Nao foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
+    printf("Nao foi encontrado o produto! Pressinone ENTER para voltar ao menu...\n");
     getchar();
+    clr();
     return 0;
 }
