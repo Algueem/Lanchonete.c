@@ -250,3 +250,18 @@ int cardapio_menu() { // Criar o menu do cardapio
     char *menu[6] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar", "Preparar"};
     return select_option(menu, 6, 2);
 }
+
+int adicionar_cardapio() {
+    int mant_cod;
+    clr();
+    mant_cod = wait_for_input(12, "Digite o codigo do produto que voce quer adicionar:\n");
+    for (int i = 0; i < dados.qnt_mantimentos; i++) {
+        if (dados.estoque[i].codigo == mant_cod) {
+            dados.cardapio[dados.qnt_comidas].receita[0] = dados.estoque[i].codigo;
+            return 1;
+        }
+    }
+    printf("Nao foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
+    getchar();
+    return 0;
+}
