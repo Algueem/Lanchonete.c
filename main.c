@@ -1,3 +1,4 @@
+
 // Bibliotecas
 #include<stdio.h>
 #include<stdlib.h>
@@ -23,9 +24,9 @@ void liberar();
 int main_option = -1;
 Data dados;
 int error = 0;
-// Declaracao de funÃ§Ãµes
+// Declaracao de funções
 
-// FunÃ§Ãµes gerenciamento
+// Funções gerenciamento
 void gerenciar_mantimentos(); // Abrir menu de mantimentos
 
 void gerenciar_cardapio(); // Abrir o menu do cardapio
@@ -47,7 +48,7 @@ int main() {
     while ((main_option = main_menu()) != 0) { //Menu principal
         switch (main_option) { // Selecionar opcoes
             case 1:
-                gerenciar_mantimentos(); 
+                gerenciar_mantimentos();
                 break;
             case 2:
                 gerenciar_cardapio();
@@ -118,7 +119,7 @@ void ler_dados() {
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     }
-    // Dados padrÃ£o
+    // Dados padrão
     dados.qnt_mantimentos = 0;
     dados.qnt_pedidos = 0;
     dados.qnt_comidas = 0;
@@ -154,7 +155,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 fflush(stdin);
                 printf("Digite o nome:");
                 fgets(dados.estoque[dados.qnt_mantimentos-1].nome, 30, stdin);
-                printf("Digite o preÃ§o");
+                printf("Digite o preço");
                 scanf("%f", &dados.estoque[dados.qnt_mantimentos-1].preco);
                 printf("Digite o codigo");
                 scanf("%d", &dados.estoque[dados.qnt_mantimentos-1].codigo);
@@ -162,7 +163,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 salvar_dados();
                 break;
             case 2: // Deletar
-                // Colocar o produto na ultima posiÃ§Ã£o do vetor
+                // Colocar o produto na ultima posição do vetor
                 done = deletar_mantimento();
                 if (done == 1){
                     dados.qnt_mantimentos -= 1;
@@ -179,7 +180,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 break;
             case 4: // Editar
                 clr();
-                printf("Digite a posiÃ§Ã£o: \n");
+                printf("Digite a posição: \n");
                 //scanf("%d", &sel);
                 printf("Digite o preco:\n");
                 //scanf("%f", &p);
@@ -203,7 +204,28 @@ void gerenciar_cardapio() { // Fazer sistema de cardapio
             case 0: // Voltar
                 break;
             case 1: // Adicionar
-                break; 
+                int done;
+                clr();
+                dados.qnt_comidas += 1;
+                realocar();
+
+                fflush(stdin);
+                printf("Digite o nome:");
+                fgets(dados.comida[dados.qnt_comidas-1].nome, 30, stdin);
+                printf("Digite o preço");
+                scanf("%f", &dados.comida[dados.qnt_comidas-1].preco);
+                printf("Digite o codigo");
+                scanf("%d", &dados.comida[dados.qnt_comidas-1].codigo);
+                done = adicionar_cardapio();
+
+                if (done == 0) {
+                    clr();
+                    dados.qnt_comidas -= 1;
+                    realocar();
+                }
+
+                salvar_dados();
+                break;
             case 2: // Deletar
                 break;
             case 3: // Ver
