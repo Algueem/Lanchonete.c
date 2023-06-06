@@ -45,7 +45,7 @@ void display_options(char **options, int amount); // Mostrar Menu
 
 void display_header(int opt); //
 
-int select_option(char **options, int amount, int menu); // Selecionar um nÃºmero
+int select_option(char **options, int amount, int menu); // Selecionar um número
 
 int main_menu(); // Abrir o menu principal
 
@@ -54,7 +54,7 @@ int estoque_menu(); // Menu de mantimentos
 int cardapio_menu(); // Menu do cardapio
 
 
-// FunÃ§Ãµes
+// Funções
 
 void clr() {
     system("clear");
@@ -75,7 +75,7 @@ void line() {
 void display_options(char **options, int amount) {
     line();
     for (int i = 0; i < amount; i++){
-        printf("| OpÃ§Ã£o %d - %s", i, options[i]); // Listar as opÃ§Ãµes
+        printf("| Opção %d - %s", i, options[i]); // Listar as opções
         for (int k = 1; k < 38-strlen(options[i]); k++) printf(" "); // Enfeite
         printf("|\n"); // Enfeite
     }
@@ -92,7 +92,7 @@ void display_header(int opt) {
             printf("|                   Mantimentos                  |\n");
             break;
         case 2:
-            printf("|                   CardÃ¡pio                     |\n");
+            printf("|                   Cardápio                     |\n");
             break;
 
         case 12: // 1->2 = Mantimentos -> Deletar
@@ -100,7 +100,7 @@ void display_header(int opt) {
             break;
         // Fazer mais se necessario
         case 99:
-            printf("| OpÃ§Ã£o invÃ¡lida! Digite uma dessas opÃ§Ãµes       |\n");
+            printf("| Opção inválida! Digite uma dessas opções       |\n");
             break;
         default:
             break;
@@ -108,16 +108,16 @@ void display_header(int opt) {
 }
 
 int select_option(char **options, int amount, int menu) { // Sistema de menu por numeros
-    display_options(options, amount); // Mostrar as opÃ§Ãµes
+    display_options(options, amount); // Mostrar as opções
     int selected;
     while (scanf("%d", &selected) != 1) { // Scan ate ser uma opcao valida
-        clr(); // 
+        clr(); //
         line();
         display_header(menu);
         line();
         display_header(99);
         display_options(options, amount);
-        clear_buffer(); 
+        clear_buffer();
     }
     clr();
     clear_buffer();
@@ -138,7 +138,7 @@ int wait_for_input(int m, char *text) {
         display_header(99);
         line();
         printf("%s", text);
-        clear_buffer(); 
+        clear_buffer();
     }
     clr();
     clear_buffer();
@@ -148,8 +148,8 @@ int wait_for_input(int m, char *text) {
 int main_menu() { // Criar o menu principal
     char *menu[5] = {"Encerrar",
                      "Gerenciar mantimentos",
-                     "Gerenciar cardapio", 
-                     "Gerenciar pedidos", 
+                     "Gerenciar cardapio",
+                     "Gerenciar pedidos",
                      "Ver relatorios"};
     line();
     display_header(0);
@@ -161,7 +161,7 @@ int main_menu() { // Criar o menu principal
     return select_option(menu, 5, 0);
 };
 
-int estoque_menu() { // Criar o menu de mantimentos 
+int estoque_menu() { // Criar o menu de mantimentos
     line();
     display_header(1);
     if(error == 1) {
@@ -175,14 +175,14 @@ int estoque_menu() { // Criar o menu de mantimentos
 
 void cadastrar_mantimento() {
     clr();
-    printf("VocÃª estÃ¡ cadastrando um mantimento\nDigite o nome:\n");
+    printf("Você está cadastrando um mantimento\nDigite o nome:\n");
     return;
 }
 
 int deletar_mantimento() {
     int mant_cod;
     clr();
-    mant_cod = wait_for_input(12, "Digite o codigo do produto que vocÃª quer deletar:\n");
+    mant_cod = wait_for_input(12, "Digite o codigo do produto que você quer deletar:\n");
     mantimento m, aux;
     for (int i = 0; i < dados.qnt_mantimentos; i++) {
         if (dados.estoque[i].codigo == mant_cod) {
@@ -192,7 +192,7 @@ int deletar_mantimento() {
             return 1;
         }
     }
-    printf("NÃ£o foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
+    printf("Não foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
     getchar();
     return 0;
 }
@@ -207,4 +207,19 @@ int cardapio_menu() { // Criar o menu do cardapio
     }
     char *menu[6] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar", "Preparar"};
     return select_option(menu, 6, 2);
+}
+
+int adicionar_cardapio() {
+    int mant_cod;
+    clr();
+    mant_cod = wait_for_input(12, "Digite o codigo do produto que você quer adicionar:\n");
+    for (int i = 0; i < dados.qnt_mantimentos; i++) {
+        if (dados.estoque[i].codigo == mant_cod) {
+            dados.receita[dados.qnt_comidas] = dados.estoque[i];
+            return 1;
+        }
+    }
+    printf("Não foi encontrado o produto! Pressinone qualquer tecla para voltar ao menu...\n");
+    getchar();
+    return 0;
 }
