@@ -23,7 +23,7 @@ void liberar();
 int main_option = -1;
 Data dados;
 int error = 0;
-// Declaracao de funções
+// Declaracao de funcoes
 
 // Funcoes gerenciamento
 void gerenciar_mantimentos(); // Abrir menu de mantimentos
@@ -190,10 +190,31 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
 void gerenciar_cardapio() { // Fazer sistema de cardapio
     int option;
     while ((option = cardapio_menu()) != 0) {
+        int done;
         switch (option) { // a fazer
             case 0: // Voltar
                 break;
             case 1: // Adicionar
+                clr();
+                dados.qnt_comidas += 1;
+                realocar();
+
+                fflush(stdin);
+                printf("Digite o nome:");
+                fgets(dados.cardapio[dados.qnt_comidas-1].nome, 30, stdin);
+                printf("Digite o preco");
+                scanf("%f", &dados.cardapio[dados.qnt_comidas-1].preco);
+                printf("Digite o codigo");
+                scanf("%d", &dados.cardapio[dados.qnt_comidas-1].codigo);
+                done = adicionar_cardapio();
+
+                if (done == 0) {
+                    clr();
+                    dados.qnt_comidas -= 1;
+                    realocar();
+                }
+
+                salvar_dados();
                 break; 
             case 2: // Deletar
                 break;
