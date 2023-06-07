@@ -17,6 +17,7 @@ typedef struct {
 typedef struct {
     int codigo; // Codigo da comida
     float preco; // Preco
+    int qnt_ingredientes; // Quantos ingredientes diferentes vai ter
     int *receita; // Vetor com os codigos dos mantimentos
     char nome[30]; // Nome
 } comida;
@@ -38,6 +39,7 @@ typedef struct { // Base de dados
 
 extern int error; // Importar variaveis da main
 extern Data dados;
+extern void alocar(int t);
 
 // Prototipos
 
@@ -203,7 +205,7 @@ int cadastrar_mantimento() {
     dados.estoque[dados.qnt_mantimentos-1].preco = preco;
     
     clr();
-    mant_cod = wait_for_input(11, "Digite o codigo:");
+    mant_cod = wait_for_input(11, "Digite o codigo:\n");
     dados.estoque[dados.qnt_mantimentos-1].codigo = mant_cod;
 
     dados.estoque[dados.qnt_mantimentos-1].quantidade = 0;
@@ -241,7 +243,14 @@ int editar_mantimento() { // Fazer
     return 0;
 }
 
-void ver_mantimentos() { // Fazer
+void ver_mantimentos() { // Feito/Melhorar
+    for (int t = 0; t < dados.qnt_mantimentos; t++) { // Percorrer todos os produtos
+        mantimento m = dados.estoque[t]; // Pegar os dados
+        printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo); // Mostrar
+    }
+    printf("Pressione ENTER para voltar...");
+    getchar();
+    clr();
     return;
 }
 
@@ -256,22 +265,59 @@ int cardapio_menu() { // Criar o menu do cardapio
         display_header(-1, 99);
         error = 0;
     }
-    char *menu[6] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar", "Preparar"};
-    return select_option(menu, 6, 2);
+    char *menu[5] = {"Voltar", "Adicionar", "Deletar", "Ver", "Editar"};
+    return select_option(menu, 5, 2);
 }
 
 int adicionar_cardapio() {
-    int mant_cod;
-    clr();
-    mant_cod = wait_for_input(12, "Digite o codigo do produto que voce quer adicionar:\n");
-    for (int i = 0; i < dados.qnt_mantimentos; i++) {
-        if (dados.estoque[i].codigo == mant_cod) {
-            dados.cardapio[dados.qnt_comidas].receita[0] = dados.estoque[i].codigo;
-            return 1;
-        }
+    // Cadastrar nome
+    fflush(stdin);
+    printf("Digite o nome:\n");
+    fgets(dados.cardapio[dados.qnt_comidas-1].nome, 30, stdin);
+    // Cadastrar preco
+    printf("Digite o preco\n");
+    scanf("%f", &dados.cardapio[dados.qnt_comidas-1].preco);
+    // Cadastrar codigo
+    printf("Digite o codigo da comida:\n");
+    scanf("%d", &dados.cardapio[dados.qnt_comidas-1].codigo);
+    // Quantidade de mantimentos
+    printf("Digite a quantidade de mantimentos\n");
+    scanf("%d", &dados.cardapio[dados.qnt_comidas-1].qnt_ingredientes);
+    if (dados.cardapio[dados.qnt_comidas-1].qnt_ingredientes > dados.qnt_mantimentos) {
+        printf("Nao existe mantimentos cadastrados o suficiente! Pressione ENTER para voltar...");
+        clear_buffer();
+        getchar();
+        clr();
+        return 0;
     }
-    printf("Nao foi encontrado o produto! Pressinone ENTER para voltar ao menu...\n");
+    alocar(2);
+        
+    for (int k = 0; k < dados.cardapio[dados.qnt_comidas-1].qnt_ingredientes; k++) {
+        int mant_cod = -1;
+        clr();
+        mant_cod = wait_for_input(2, "Digite o codigo do produto que voce quer adicionar:\n");
+        for (int i = 0; i < dados.qnt_mantimentos; i++) {
+            if (dados.estoque[i].codigo == mant_cod) {
+                dados.cardapio[dados.qnt_comidas-1].receita[k] = dados.estoque[i].codigo;
+                return 1;
+            }
+        }
+        clr();
+        printf("Nao foi encontrado o produto! Pressione ENTER para tentar novamente\n");
+    }
+    return 0;
+}
+
+void ver_cardapio() {
+    for (int k = 0; k < dados.qnt_comidas; k++) {
+        comida c = dados.cardapio[k];
+        printf("Nome: %sPreco: %.2f\nCodigo: %d\nReceita: ", c.nome, c.preco, c.codigo);
+        for (int i = 0; i < c.qnt_ingredientes; i++) {
+            printf("%d ", c.receita[i]);
+        }
+        printf("\n\n");
+    }
+    printf("Pressione ENTER para voltar...");
     getchar();
     clr();
-    return 0;
 }

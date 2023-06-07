@@ -13,7 +13,7 @@ void salvar_dados();
 
 void ler_dados();
 
-void alocar(int q_mant, int q_cardapio, int q_pedidos);
+void alocar(int t);
 
 void realocar();
 
@@ -71,10 +71,24 @@ int main() {
     return 0;
 }
 
-void alocar(int q_mant, int q_cardapio, int q_pedidos) { // Preparar a memoria
-    dados.estoque = (mantimento*) calloc(q_mant, sizeof(mantimento));
-    dados.cardapio = (comida*) calloc(q_cardapio, sizeof(comida));
-    dados.pedidos = (pedido*) calloc(q_pedidos, sizeof(pedido));
+void alocar(int t) { // Preparar a memoria
+    if (t == 0) {
+        dados.qnt_mantimentos = 0;
+        dados.qnt_pedidos = 0;
+        dados.qnt_comidas = 0;
+        dados.estoque = (mantimento*) calloc(dados.qnt_mantimentos, sizeof(mantimento));
+        dados.cardapio = (comida*) calloc(dados.qnt_comidas, sizeof(comida));
+        dados.pedidos = (pedido*) calloc(dados.qnt_pedidos, sizeof(pedido));
+    }
+    if (t == 1) {
+        for (int i = 0; i < dados.qnt_comidas; i++) {
+            dados.cardapio[i].receita = (int*) calloc(dados.cardapio[i].qnt_ingredientes, sizeof(int));
+        }
+    }
+    if(t == 2){
+        int qnt_ing = dados.cardapio[dados.qnt_comidas-1].qnt_ingredientes;
+        dados.cardapio[dados.qnt_comidas-1].receita = (int*) calloc(qnt_ing, sizeof(int));
+    }
     return;
 }
 
@@ -89,13 +103,14 @@ void liberar() { // Liberar a memoria alocada
     free(dados.estoque);
     free(dados.cardapio);
     free(dados.pedidos);
+    for (int i = 0; i < dados.qnt_comidas; i++) free(dados.cardapio[i].receita);
 }
 
 // Arquivos
 
 void salvar_dados() {
     FILE *arquivo; // Variavel arquivo e um ponteiro
-    arquivo = fopen("dados.csv", "rb"); // Abrir o arquivo
+    arquivo = fopen("dados.csv", "wb"); // Abrir o arquivo
     if (arquivo == NULL) { // Se nao conseguir abrir
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
@@ -107,6 +122,9 @@ void salvar_dados() {
     fwrite(dados.estoque, sizeof(mantimento), dados.qnt_mantimentos, arquivo);
     fwrite(dados.pedidos, sizeof(pedido), dados.qnt_pedidos, arquivo);
     fwrite(dados.cardapio, sizeof(comida), dados.qnt_comidas, arquivo);
+    for (int i = 0; i < dados.qnt_comidas; i++) {
+        fwrite(dados.cardapio[i].receita, sizeof(int), dados.cardapio[i].qnt_ingredientes, arquivo);
+    }
     fclose(arquivo);
     return;
 }
@@ -118,21 +136,21 @@ void ler_dados() {
         fprintf(stderr, "\nErro ao abrir arquivo\n");
         exit(1);
     }
-    // Dados padrao
-    alocar(0,0,0); // Deixar a memoria pronta
-    dados.qnt_mantimentos = 0;
-    dados.qnt_pedidos = 0;
-    dados.qnt_comidas = 0;
+    // Preparar os vetores
+    alocar(0);
     // Carregando
     // Ler os dados para a variavel dados
     fread(&(dados.qnt_comidas), sizeof(int), 1, arquivo);
     fread(&(dados.qnt_pedidos), sizeof(int), 1, arquivo);
     fread(&(dados.qnt_mantimentos), sizeof(int), 1, arquivo);
-    // Realocar o vetor dos dados para armazenar os mantimentos etc...
-    realocar(dados.qnt_mantimentos, dados.qnt_comidas,dados.qnt_pedidos);
+    realocar();
     fread(dados.estoque, sizeof(mantimento), dados.qnt_mantimentos, arquivo);
     fread(dados.pedidos, sizeof(pedido), dados.qnt_pedidos, arquivo);
     fread(dados.cardapio, sizeof(comida), dados.qnt_comidas, arquivo);
+    alocar(1); // Alocar o vetor de receitas
+    for (int i = 0; i < dados.qnt_comidas; i++) { // Ler as receitas
+        fread(dados.cardapio[i].receita, sizeof(int), dados.cardapio[i].qnt_ingredientes, arquivo);
+    }
     fclose(arquivo);
     return;
 }
@@ -163,10 +181,7 @@ void gerenciar_mantimentos() { // Fazer sistema de mantimentos
                 break;
             case 3: // Ver -- Feito
                 clr();
-                for (int t = 0; t < dados.qnt_mantimentos; t++) { // Percorrer todos os produtos
-                    mantimento m = dados.estoque[t]; // Pegar os dados
-                    printf("Nome: %sPreco: %.2f\nCodigo: %d\n", m.nome, m.preco, m.codigo); // Mostrar
-                }
+                ver_mantimentos();
                 break;
             case 4: // Editar -- Fazer
                 clr();
@@ -198,27 +213,21 @@ void gerenciar_cardapio() { // Fazer sistema de cardapio
                 clr();
                 dados.qnt_comidas += 1;
                 realocar();
-
-                fflush(stdin);
-                printf("Digite o nome:");
-                fgets(dados.cardapio[dados.qnt_comidas-1].nome, 30, stdin);
-                printf("Digite o preco");
-                scanf("%f", &dados.cardapio[dados.qnt_comidas-1].preco);
-                printf("Digite o codigo");
-                scanf("%d", &dados.cardapio[dados.qnt_comidas-1].codigo);
+                dados.cardapio[dados.qnt_comidas-1].qnt_ingredientes = 0;
                 done = adicionar_cardapio();
-
                 if (done == 0) {
-                    clr();
                     dados.qnt_comidas -= 1;
                     realocar();
                 }
-
-                salvar_dados();
+                if (done == 1) {
+                    clr();
+                    salvar_dados();
+                }
                 break; 
             case 2: // Deletar
                 break;
             case 3: // Ver
+                ver_cardapio();
                 break;
             case 4: // Editar
                 break;
