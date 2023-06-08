@@ -2,17 +2,22 @@
 ## Tarefas:
 - [X] Menu
 - [ ] Gerenciar mantimentos
-  - [ ] (Em progresso) Adicionar 
+  - [X] Adicionar 
+    - [ ] Verificar preço negativo
+    - [ ] Verificar codigo negativo
   - [ ] (Em progresso) Editar
-  - [ ] Ver 
+  - [X] Ver 
   - [X] Apagar
+    - [ ] Verificar se possui uma receita com esse ingrediente
   - [ ] Comprar
     - [ ] Verificar se tem saldo
     - [ ] Adicionar a quantidade
 - [ ] Gerenciar cardápio
-  - [ ] Adicionar
+  - [X] Adicionar
+    - [ ] Verificar preço negativo
+    - [ ] Verificar codigo negativo
   - [ ] Editar
-  - [ ] Ver
+  - [X] Ver
   - [ ] Apagar
 - [ ] Registrar pedidos
   - [ ] Preparar pedido
